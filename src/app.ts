@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user";
+import studentDetailsRoutes from "./routes/studentDetails";
+import customerEnquiryRoutes from "./routes/customerEnquiry";
 dotenv.config();
 
 const app = express();
@@ -13,6 +15,8 @@ app.use(express.json());
 
 // Routes
 app.use("/user", userRoutes);
+app.use("/student-details", studentDetailsRoutes);
+app.use("/customer-enquiry", customerEnquiryRoutes);
 
 // Test API
 app.get("/", (req, res) => {
