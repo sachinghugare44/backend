@@ -15,9 +15,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const User_1 = __importDefault(require("../models/User"));
 const router = express_1.default.Router();
+//user registration POST /api/users
+// User registration POST /api/users
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, password, mobile } = req.body;
+        // Check if mobile already exists
+        const existingMobile = yield User_1.default.findOne({ mobile });
+        if (existingMobile) {
+            return res.status(400).json({
+                message: "Mobile number already registered"
+            });
+        }
+        // Create new user
         const newUser = new User_1.default({
             name,
             email,
@@ -33,13 +43,41 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (error) {
-        console.log("ERROR 👉", error); // 👈 add this
+        console.log("ERROR 👉", error);
         res.status(500).json({
             message: "Error creating user",
-            error: error.message // 👈 enable this
+            error: error.message
         });
     }
 }));
+// User login/validation POST /user/login
+router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { mobile, password } = req.body;
+        if (!mobile || !password) {
+            console.log("Mobile or password missing in request body", mobile, password);
+            return res.status(400).json({ message: "Mobile and password are required" });
+        }
+        const user = yield User_1.default.findOne({ mobile });
+        if (!user) {
+            console.log("Mobile or password missing in request body", mobile, password);
+            return res.status(404).json({ message: "User not registered" });
+        }
+        if (user.password !== password) {
+            console.log("Invalid password for mobile:", mobile);
+            return res.status(401).json({ message: "Invalid password" });
+        }
+        res.status(200).json({ message: "Login successful", data: user });
+    }
+    catch (error) {
+        console.log("ERROR 👉", error);
+        res.status(500).json({
+            message: "Error validating user",
+            error: error.message
+        });
+    }
+}));
+//user fetching GET /api/users
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield User_1.default.find();

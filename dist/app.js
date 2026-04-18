@@ -8,6 +8,8 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const user_1 = __importDefault(require("./routes/user"));
+const studentDetails_1 = __importDefault(require("./routes/studentDetails"));
+const customerEnquiry_1 = __importDefault(require("./routes/customerEnquiry"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 // Middleware
@@ -15,9 +17,11 @@ app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 // Routes
 app.use("/user", user_1.default);
+app.use("/student-details", studentDetails_1.default);
+app.use("/customer-enquiry", customerEnquiry_1.default);
 // Test API
 app.get("/", (req, res) => {
-    res.send("API is working 🚀");
+    res.send("API is working but good 🚀");
 });
 const PORT = process.env.PORT || 5000;
 // DB Connection
