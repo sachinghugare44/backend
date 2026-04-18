@@ -20,7 +20,7 @@ app.use("/customer-enquiry", customerEnquiryRoutes);
 
 // Test API
 app.get("/", (req, res) => {
-  res.send("API is working 🚀");
+  res.send("API is working but good 🚀");
 });
 
 const PORT = process.env.PORT || 5000;
