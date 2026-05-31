@@ -58,6 +58,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid password" });
     } 
     res.status(200).json({ message: "Login successful", data: user });
+    console.log("Login successful for mobile:", user);
   } catch (error: any) {
     console.log("ERROR 👉", error);
     res.status(500).json({
@@ -87,4 +88,27 @@ router.get("/", async (req, res) => {
     });
   }
 });
+router.get("/mobile/:mobile", async (req, res) => {
+  try {
+    const { mobile } = req.params;
+    if (!mobile) {
+      return res.status(400).json({ message: "Mobile number is required" });
+    }
+    const user = await User.findOne({ mobile });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({
+      message: "User fetched successfully",
+      data: user
+    });
+  } catch (error: any) {
+    console.log("ERROR 👉", error);
+    res.status(500).json({
+      message: "Error fetching user by mobile",
+      error: error.message
+    });
+  }
+});
 export default router;
+// Get user details by mobile (unique)
