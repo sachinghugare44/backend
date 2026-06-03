@@ -68,6 +68,7 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
             return res.status(401).json({ message: "Invalid password" });
         }
         res.status(200).json({ message: "Login successful", data: user });
+        console.log("Login successful for mobile:", user);
     }
     catch (error) {
         console.log("ERROR 👉", error);
@@ -94,4 +95,28 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
 }));
+router.get("/mobile/:mobile", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { mobile } = req.params;
+        if (!mobile) {
+            return res.status(400).json({ message: "Mobile number is required" });
+        }
+        const user = yield User_1.default.findOne({ mobile });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json({
+            message: "User fetched successfully",
+            data: user
+        });
+    }
+    catch (error) {
+        console.log("ERROR 👉", error);
+        res.status(500).json({
+            message: "Error fetching user by mobile",
+            error: error.message
+        });
+    }
+}));
 exports.default = router;
+// Get user details by mobile (unique)
