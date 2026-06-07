@@ -6,7 +6,7 @@ const router = express.Router();
 // User registration POST /api/users
 router.post("/", async (req, res) => {
   try {
-    const { name, email, password, mobile } = req.body;
+    const { name, email, password, mobile, usertype } = req.body;
 
     // Check if mobile already exists
     const existingMobile = await User.findOne({ mobile });
@@ -21,7 +21,8 @@ router.post("/", async (req, res) => {
       name,
       email,
       password,
-      mobile
+      mobile,
+      usertype
     });
     console.log("Creating new user...", newUser);
     const savedUser = await newUser.save();

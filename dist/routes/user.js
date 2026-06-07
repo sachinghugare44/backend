@@ -19,7 +19,7 @@ const router = express_1.default.Router();
 // User registration POST /api/users
 router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, email, password, mobile } = req.body;
+        const { name, email, password, mobile, usertype } = req.body;
         // Check if mobile already exists
         const existingMobile = yield User_1.default.findOne({ mobile });
         if (existingMobile) {
@@ -32,7 +32,8 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             name,
             email,
             password,
-            mobile
+            mobile,
+            usertype
         });
         console.log("Creating new user...", newUser);
         const savedUser = yield newUser.save();

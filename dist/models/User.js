@@ -21,6 +21,11 @@ const userSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
         unique: true
+    },
+    usertype: {
+        type: String,
+        required: true,
+        unique: true
     }
 }, { timestamps: true });
 exports.default = mongoose_1.default.model("User", userSchema);
