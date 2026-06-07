@@ -1,13 +1,13 @@
+import 'dotenv/config';
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import dotenv from "dotenv";
 import userRoutes from "./routes/user";
 import studentDetailsRoutes from "./routes/studentDetails";
 import customerEnquiryRoutes from "./routes/customerEnquiry";
 import attendanceRoutes from "./routes/attendance";
 import adminAccessRoutes from "./routes/adminAccess";
-dotenv.config();
+import otpRoutes from "./routes/otp";
 
 const app = express();
 
@@ -21,6 +21,7 @@ app.use("/student-details", studentDetailsRoutes);
 app.use("/customer-enquiry", customerEnquiryRoutes);
 app.use("/attendance", attendanceRoutes);
 app.use("/admin-access", adminAccessRoutes);
+app.use("/otp", otpRoutes);
 
 // Test API
 app.get("/", (req, res) => {
