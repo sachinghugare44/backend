@@ -82,7 +82,13 @@ router.post("/send", async (req, res) => {
       html: `<p>Your OTP code is <strong>${otpCode}</strong>. It expires in 10 minutes.</p>`
     };
 
-    const transporter = createTransporter();
+    const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
     await transporter.sendMail(mailOptions);
 
     res.status(200).json({ message: "OTP sent to email" });
