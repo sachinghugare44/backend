@@ -39,21 +39,36 @@ router.post("/send", async (req, res) => {
       return res.status(400).json({ message: "Email or mobile is required to send OTP" });
     }
 
-    const user = await User.findOne(email ? { email } : { mobile });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    let targetEmail: string | undefined;
+    let targetMobile: string | undefined;
 
-    if (!user.email) {
-      return res.status(400).json({ message: "User does not have an email address" });
+    if (email) {
+      // simple email syntax validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: "Invalid email format" });
+      }
+      targetEmail = email;
+      const user = await User.findOne({ email });
+      if (user) targetMobile = user.mobile;
+    } else if (mobile) {
+      const user = await User.findOne({ mobile });
+      if (!user) {
+        return res.status(404).json({ message: "User not found by mobile" });
+      }
+      if (!user.email) {
+        return res.status(400).json({ message: "User does not have an email address" });
+      }
+      targetEmail = user.email;
+      targetMobile = user.mobile;
     }
 
     const otpCode = generateOtp();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     await UserOtp.create({
-      email: user.email,
-      userMobile: user.mobile,
+      email: targetEmail,
+      userMobile: targetMobile,
       otpCode,
       expiresAt,
       used: false
@@ -61,8 +76,8 @@ router.post("/send", async (req, res) => {
 
     const mailOptions = {
       from: EMAIL_FROM,
-      to: user.email,
-      subject: "Your OTP Code",
+      to: targetEmail,
+      subject: "Attendance OTP Code",
       text: `Your OTP code is ${otpCode}. It expires in 10 minutes.`,
       html: `<p>Your OTP code is <strong>${otpCode}</strong>. It expires in 10 minutes.</p>`
     };
@@ -101,10 +116,11 @@ router.post("/verify", async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "User not found after OTP verification" });
+      // OTP valid but user not registered yet
+      return res.status(200).json({ message: "OTP verified successfully", userExists: false, data: { email } });
     }
 
-    res.status(200).json({ message: "OTP verified successfully", data: user });
+    res.status(200).json({ message: "OTP verified successfully", userExists: true, data: user });
   } catch (error: any) {
     console.log("OTP verify error", error);
     res.status(500).json({ message: "Error verifying OTP", error: error.message });

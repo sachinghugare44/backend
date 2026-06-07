@@ -8,7 +8,7 @@ const userOtpSchema = new mongoose.Schema({
   },
   userMobile: {
     type: String,
-    required: true,
+    required: false,
     index: true
   },
   otpCode: {
