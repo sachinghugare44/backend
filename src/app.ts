@@ -8,6 +8,7 @@ import customerEnquiryRoutes from "./routes/customerEnquiry";
 import attendanceRoutes from "./routes/attendance";
 import adminAccessRoutes from "./routes/adminAccess";
 import otpRoutes from "./routes/otp";
+import paymentRoutes from "./routes/paymentRoutes";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/customer-enquiry", customerEnquiryRoutes);
 app.use("/attendance", attendanceRoutes);
 app.use("/admin-access", adminAccessRoutes);
 app.use("/otp", otpRoutes);
+app.use("/payment", paymentRoutes);
 
 // Test API
 app.get("/", (req, res) => {

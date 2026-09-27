@@ -13,6 +13,7 @@ const customerEnquiry_1 = __importDefault(require("./routes/customerEnquiry"));
 const attendance_1 = __importDefault(require("./routes/attendance"));
 const adminAccess_1 = __importDefault(require("./routes/adminAccess"));
 const otp_1 = __importDefault(require("./routes/otp"));
+const paymentRoutes_1 = __importDefault(require("./routes/paymentRoutes"));
 const app = (0, express_1.default)();
 // Middleware
 app.use((0, cors_1.default)());
@@ -24,6 +25,7 @@ app.use("/customer-enquiry", customerEnquiry_1.default);
 app.use("/attendance", attendance_1.default);
 app.use("/admin-access", adminAccess_1.default);
 app.use("/otp", otp_1.default);
+app.use("/payment", paymentRoutes_1.default);
 // Test API
 app.get("/", (req, res) => {
     res.send("API is working but good 🚀");

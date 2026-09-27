@@ -119,5 +119,30 @@ router.get("/mobile/:mobile", (req, res) => __awaiter(void 0, void 0, void 0, fu
         });
     }
 }));
+// Forgot password - verify mobile exists and update password
+router.post("/forgot-password", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { mobile, password } = req.body;
+        if (!mobile || !password) {
+            return res.status(400).json({ message: "Mobile and new password are required" });
+        }
+        const user = yield User_1.default.findOne({ mobile });
+        if (!user) {
+            return res.status(404).json({ message: "User not registered" });
+        }
+        user.password = password;
+        yield user.save();
+        res.status(200).json({
+            message: "Password changed successfully"
+        });
+    }
+    catch (error) {
+        console.log("ERROR 👉", error);
+        res.status(500).json({
+            message: "Error updating password",
+            error: error.message
+        });
+    }
+}));
 exports.default = router;
 // Get user details by mobile (unique)

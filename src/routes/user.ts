@@ -111,5 +111,34 @@ router.get("/mobile/:mobile", async (req, res) => {
     });
   }
 });
+
+// Forgot password - verify mobile exists and update password
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { mobile, password } = req.body;
+    if (!mobile || !password) {
+      return res.status(400).json({ message: "Mobile and new password are required" });
+    } 
+
+    const user = await User.findOne({ mobile });
+    if (!user) {
+      return res.status(404).json({ message: "User not registered" });
+    }
+
+    user.password = password;
+    await user.save();
+
+    res.status(200).json({
+      message: "Password changed successfully"
+    });
+  } catch (error: any) {
+    console.log("ERROR 👉", error);
+    res.status(500).json({
+      message: "Error updating password",
+      error: error.message
+    });
+  }
+});
+
 export default router;
 // Get user details by mobile (unique)
